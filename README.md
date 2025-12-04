@@ -1,0 +1,1 @@
+Đây là đồ án về quản lý thú cưng của nhóm 8 môn Cơ sở dữ liệu nâng cao.
