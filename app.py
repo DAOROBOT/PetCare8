@@ -7,7 +7,7 @@ from datetime import date
 # BẠN CẦN SỬA LẠI TÊN SERVER CHO ĐÚNG MÁY BẠN
 DB_CONFIG = {
     'driver': '{ODBC Driver 17 for SQL Server}',
-    'server': 'DESKTOP-TCP80HR\\SQLEXPRESS', # Thay bằng tên Server của bạn, VD: DESKTOP-XYZ
+    'server': r'(local)\SQLEXPRESS', # Thay bằng tên Server của bạn, VD: DESKTOP-XYZ
     'database': 'PETCAREX',
     'trusted_connection': 'yes'
 }
