@@ -1,0 +1,41 @@
+﻿USE PETCAREX;
+GO
+
+
+DECLARE @i INT = 1;
+DECLARE @TotalRows INT = 70000;
+DECLARE @RandNV CHAR(4);
+DECLARE @RandKhach CHAR(12);
+DECLARE @MaHD CHAR(10);
+
+
+SELECT MA_NV INTO #TempNV FROM NHAN_VIEN;
+SELECT CCCD INTO #TempKhach FROM KHACH;
+
+BEGIN TRANSACTION; -- Dung Transaction de tang toc do Insert
+WHILE @i <= @TotalRows
+BEGIN
+    -- Lay ngau nhien NV va Khach
+    SELECT TOP 1 @RandNV = MA_NV FROM #TempNV ORDER BY NEWID();
+    SELECT TOP 1 @RandKhach = CCCD FROM #TempKhach ORDER BY NEWID();
+
+    -- TAO MA HOA DON DUY NHAT (HD + 8 chu so) -> HD00000001, HD00000002...
+    SET @MaHD = 'HD' + RIGHT('00000000' + CAST(@i AS VARCHAR), 8);
+
+    INSERT INTO HOA_DON (MA_HOA_DON, MA_NHAN_VIEN, CCCD_KHACH_HANG, TONG_TIEN, THOI_DIEM_LAP_HOA_DON, HINH_THUC_THANH_TOAN)
+    VALUES (
+        @MaHD,
+        @RandNV,
+        @RandKhach,
+        CAST(FLOOR(RAND()*(2000000-100000+1)+100000) AS INT),
+        DATEADD(DAY, -CAST(FLOOR(RAND()*730) AS INT), GETDATE()),
+        CASE WHEN RAND() > 0.5 THEN N'Tiền mặt' ELSE N'Chuyển khoản' END
+    );
+
+ 
+    SET @i = @i + 1;
+END
+COMMIT;
+
+
+GO

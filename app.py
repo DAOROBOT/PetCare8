@@ -3,11 +3,9 @@ import pyodbc
 import pandas as pd
 from datetime import date
 
-# --- CẤU HÌNH KẾT NỐI ---
-# BẠN CẦN SỬA LẠI TÊN SERVER CHO ĐÚNG MÁY BẠN
 DB_CONFIG = {
     'driver': '{ODBC Driver 17 for SQL Server}',
-    'server': r'(local)\SQLEXPRESS', # Thay bằng tên Server của bạn, VD: DESKTOP-XYZ
+    'server': r'(local)\SQLEXPRESS', # Thay bằng tên Server của cô
     'database': 'PETCAREX',
     'trusted_connection': 'yes'
 }
@@ -32,11 +30,11 @@ def execute_command(command, params):
 st.set_page_config(page_title="PetCareX System", layout="wide")
 st.title("🐾 HỆ THỐNG QUẢN LÝ THÚ CƯNG PETCAREX")
 
-# Menu phân quyền theo yêu cầu file PDF 
+# Menu phân quyền 
 menu = ["Khách hàng", "Bác sĩ", "Nhân viên", "Quản lý"]
 role = st.sidebar.selectbox("Chọn vai trò đăng nhập:", menu)
 
-# --- 1. CHỨC NĂNG KHÁCH HÀNG [cite: 402] ---
+# --- 1. CHỨC NĂNG KHÁCH HÀNG ---
 if role == "Khách hàng":
     st.header("👤 Cổng thông tin Khách hàng")
     tab1, tab2, tab3 = st.tabs(["Tìm kiếm & Mua hàng", "Đặt lịch khám", "Lịch sử"])
@@ -72,7 +70,7 @@ if role == "Khách hàng":
             st.write("Lịch sử hóa đơn:")
             st.dataframe(run_query("SELECT * FROM HOA_DON WHERE CCCD_KHACH_HANG = ?", (cccd_his,)))
 
-# --- 2. CHỨC NĂNG BÁC SĨ [cite: 403] ---
+# --- 2. CHỨC NĂNG BÁC SĨ---
 elif role == "Bác sĩ":
     st.header("👨‍⚕️ Cổng làm việc Bác sĩ")
     
@@ -95,7 +93,7 @@ elif role == "Bác sĩ":
     if st.checkbox("Hiển thị danh mục thuốc"):
         st.dataframe(run_query("SELECT * FROM SAN_PHAM WHERE LOAI_SAN_PHAM = 'Thuoc'"))
 
-# --- 3. CHỨC NĂNG NHÂN VIÊN [cite: 404] ---
+# --- 3. CHỨC NĂNG NHÂN VIÊN---
 elif role == "Nhân viên":
     st.header("staff Cổng Nhân viên Lễ tân")
     st.info("Chức năng: Tạo lịch khám trực tiếp & Xác định khách cũ/mới")
@@ -108,7 +106,7 @@ elif role == "Nhân viên":
         else:
             st.warning("Khách hàng mới. Vui lòng tạo hồ sơ.")
 
-# --- 4. CHỨC NĂNG QUẢN LÝ [cite: 405] ---
+# --- 4. CHỨC NĂNG QUẢN LÝ ---
 elif role == "Quản lý":
     st.header("📈 Báo cáo Quản trị")
     
@@ -119,7 +117,7 @@ elif role == "Quản lý":
     if st.button("Xem thống kê doanh thu"):
         # Gọi SP BaoCaoDoanhThu đã tạo
         sql = "EXEC sp_BaoCaoDoanhThu ?, ?"
-        # Lưu ý: pandas read_sql với EXEC đôi khi phức tạp, dùng query trực tiếp cho đơn giản nếu lỗi
+    
         sql_direct = f"""
             SELECT THOI_DIEM_LAP_HOA_DON, SUM(TONG_TIEN) as DOANH_THU 
             FROM HOA_DON 

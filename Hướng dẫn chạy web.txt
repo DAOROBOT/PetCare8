@@ -1,0 +1,3 @@
+Bước 1: Vào thư mục chứa file app.py
+Bước 2: pip install streamlit pyodbc pandas
+Bước 3: streamlit run app.py
